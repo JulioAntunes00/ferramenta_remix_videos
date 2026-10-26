@@ -36,6 +36,23 @@ def create_session():
     return {"session_id": session_id}
 
 
+ALLOWED_EXTENSIONS = {".mp4", ".mov", ".m4v"}
+MAX_FILE_SIZE = 100 * 1024 * 1024  # 100 MB por clipe
+
+
+def _validate_video_header(chunk: bytes) -> bool:
+    """
+    Validação de Assinatura Binária (Magic Bytes):
+    Garante que o arquivo enviado é realmente um arquivo MP4/MOV legítimo,
+    evitando que scripts maliciosos (PHP, shell, executáveis) sejam mascarados.
+    """
+    if len(chunk) < 12:
+        return False
+    # Arquivos MP4 / MOV / QuickTime possuem 'ftyp', 'moov', ou 'mdat' nos primeiros bytes
+    box_type = chunk[4:8]
+    return box_type in [b"ftyp", b"moov", b"mdat", b"wide", b"skip"]
+
+
 @router.post("/upload/{session_id}")
 async def upload_clip(
     session_id: str,
@@ -43,11 +60,27 @@ async def upload_clip(
     file: UploadFile = File(...)
 ):
     """
-    Recebe um vídeo de uma categoria específica (hook, body ou cta).
-    Valida limites de segurança (max 4 por categoria).
+    Recebe um vídeo com validação estrita de segurança:
+    1. Sanitização do session_id contra Path Traversal
+    2. Validação da categoria
+    3. Validação de extensão
+    4. Validação binária (Magic Bytes de vídeo)
+    5. Limite de tamanho de arquivo
     """
+    # 1. Proteção Path Traversal
+    if not session_id.isalnum() or len(session_id) > 16:
+        raise HTTPException(status_code=400, detail="ID de sessão inválido.")
+
     if category not in ["hook", "body", "cta"]:
         raise HTTPException(status_code=400, detail="Categoria inválida. Use: hook, body ou cta.")
+
+    # 2. Validação de extensão
+    file_ext = Path(file.filename or "video.mp4").suffix.lower()
+    if file_ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Formato não suportado: {file_ext}. Envie apenas vídeos MP4 ou MOV."
+        )
 
     paths = StorageService.get_session_paths(session_id)
     cat_dir = paths["upload"] / category
@@ -60,13 +93,22 @@ async def upload_clip(
             detail=f"Limite de {MAX_VIDEOS_PER_CATEGORY} vídeos por categoria atingido para esta versão."
         )
 
-    # Salva arquivo com nome limpo
-    file_ext = Path(file.filename or "video.mp4").suffix.lower() or ".mp4"
+    # 3. Leitura e Validação Binária
+    content = await file.read()
+    if len(content) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=400, detail="Arquivo excede o limite máximo permitido de 100MB.")
+
+    if not _validate_video_header(content[:32]):
+        raise HTTPException(
+            status_code=400,
+            detail="Arquivo inválido ou corrompido. O arquivo não possui assinatura de vídeo válida."
+        )
+
+    # 4. Gravação com nome estritamente sanitizado e determinístico
     safe_filename = f"{category}_{len(existing_files) + 1}{file_ext}"
     dest_path = cat_dir / safe_filename
 
     with open(dest_path, "wb") as f:
-        content = await file.read()
         f.write(content)
 
     return {
