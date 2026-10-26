@@ -1,15 +1,15 @@
 @echo off
-title Remix Videos - Inicializador Local
+title Multiplicador de Videos TikTok - Inicializador Local
 echo ====================================================
-echo      INICIANDO SISTEMA REMIX VIDEOS ANTI-BAN
+echo   INICIANDO MULTIPLICADOR DE VIDEOS TIKTOK
 echo ====================================================
 echo.
 
 echo 1. Iniciando Backend FastAPI (Porta 8000)...
-start "Backend - Remix Videos" cmd /k "cd backend && uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
+start "Backend - Multiplicador TikTok" cmd /k "cd backend && uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
 
 echo 2. Iniciando Frontend Vite React (Porta 5173)...
-start "Frontend - Remix Videos" cmd /k "cd frontend && npm run dev"
+start "Frontend - Multiplicador TikTok" cmd /k "cd frontend && npm run dev"
 
 echo.
 echo Tudo pronto! O sistema estara acessivel em:

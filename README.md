@@ -1,4 +1,4 @@
-# 🚀 Remix Vídeos Anti-Ban | SaaS de Escala de Criativos
+# 🚀 Multiplicador de Vídeos TikTok | SaaS de Escala de Criativos
 
 > **Plataforma profissional para criação automatizada de variações em vídeo em larga escala para TikTok, Reels e Shorts, com proteção ativa contra punições de conteúdo não original (Anti-Ban).**
 
@@ -8,7 +8,7 @@
 
 No mercado de tráfego pago e produção de conteúdo, criadores e agências precisam testar dezenas de criativos diferentes toda semana. No entanto, produzir e editar manualmente dezenas de variações no Premiere ou CapCut consome dias de trabalho.
 
-O **Remix Vídeos** automatiza esse processo combinando de forma inteligente 3 blocos estruturais de vídeo:
+O **Multiplicador de Vídeos TikTok** automatiza esse processo combinando de forma inteligente 3 blocos estruturais de vídeo:
 1. 🎣 **Gancho (Hook)** - Os primeiros 3 a 5 segundos de retenção.
 2. 📦 **Apresentação / Corpo (Body)** - Demonstração da oferta e do produto.
 3. 🎯 **Chamada para Ação (CTA)** - O fechamento com o comando de compra ou clique.

@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router as api_router
 
 app = FastAPI(
-    title="Remix Vídeos API",
+    title="Multiplicador de Vídeos TikTok API",
     description="Motor modular de combinação de criativos em vídeo com sanitização Anti-Ban",
     version="1.0.0"
 )

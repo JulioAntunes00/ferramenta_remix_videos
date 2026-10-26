@@ -170,9 +170,9 @@ export default function App() {
             </div>
             <div>
               <span className="font-bold text-lg text-slate-100 tracking-tight flex items-center gap-2">
-                Remix Vídeos <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 rounded-md">Anti-Ban 2.0</span>
+                Multiplicador de Vídeos TikTok <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 rounded-md">Anti-Ban 2.0</span>
               </span>
-              <p className="text-xs text-slate-400">Escala de Criativos para TikTok, Reels e Shorts</p>
+              <p className="text-xs text-slate-400">Escala Inteligente de Criativos para TikTok, Reels e Shorts</p>
             </div>
           </div>
 
