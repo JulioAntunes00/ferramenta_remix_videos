@@ -111,10 +111,17 @@ async def upload_clip(
     with open(dest_path, "wb") as f:
         f.write(content)
 
+    # Inspeciona orientação e resolução para feedback de UI
+    video_info = video_engine.get_video_info(dest_path)
+
     return {
         "filename": safe_filename,
         "category": category,
         "total_in_category": len(existing_files) + 1,
+        "orientation": video_info["orientation"],
+        "is_horizontal": video_info["is_horizontal"],
+        "resolution": f"{video_info['width']}x{video_info['height']}",
+        "duration": round(video_info["duration"], 1),
     }
 
 

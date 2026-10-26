@@ -114,7 +114,14 @@ export const UploadCard = ({
                 >
                   <div className="flex items-center gap-2 overflow-hidden pr-2">
                     <Film className="w-4 h-4 text-indigo-400 shrink-0" />
-                    <span className="truncate text-slate-300 font-medium">{file.name}</span>
+                    <div className="flex flex-col truncate">
+                      <span className="truncate text-slate-300 font-medium">{file.name}</span>
+                      {file.is_horizontal && (
+                        <span className="text-[10px] text-amber-400 font-semibold flex items-center gap-1">
+                          📐 Horizontal (Fundo Desfocado Ativo)
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                 </div>

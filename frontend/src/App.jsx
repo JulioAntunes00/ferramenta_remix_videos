@@ -58,7 +58,15 @@ export default function App() {
       if (res.ok) {
         setUploads((prev) => ({
           ...prev,
-          [category]: [...prev[category], { name: data.filename }],
+          [category]: [
+            ...prev[category],
+            {
+              name: data.filename,
+              is_horizontal: data.is_horizontal,
+              resolution: data.resolution,
+              duration: data.duration,
+            },
+          ],
         }));
       } else {
         alert(data.detail || 'Erro ao enviar vídeo.');
