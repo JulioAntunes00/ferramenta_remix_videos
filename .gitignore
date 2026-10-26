@@ -17,6 +17,7 @@ temp/
 # Ambientes e segredos
 .env
 .env.local
+memoria.md
 
 # IDEs e sistema
 .vscode/
