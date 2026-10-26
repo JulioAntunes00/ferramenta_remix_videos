@@ -69,3 +69,9 @@ C:\Users\Note\Desktop\site_montagem/
   - Definição do escopo, requisitos de negócio e anti-ban TikTok.
   - Inicialização do repositório Git local e criação do `memoria.md` e `.gitignore`.
   - Decisão da trava de segurança inicial $4 \times 4 \times 4$.
+  - Instalação automatizada do FFmpeg 9.0.2 e configuração no PATH do Windows.
+  - Criação do Backend FastAPI modular (`video_engine.py`, `similarity.py`, `storage.py`, `routes.py`).
+  - Implementação da sanitização Anti-Ban (`-map_metadata -1`, áudio loudnorm, injeção de metadados limpos).
+  - Criação do Frontend Vite + React + Tailwind CSS com visual SaaS moderno (Desktop & Mobile).
+  - Criação do script de inicialização `iniciar_sistema.bat`.
+  - Push de todas as alterações para o GitHub (`main`).
