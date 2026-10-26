@@ -1,0 +1,25 @@
+# Git Ignore - Remix Vídeos
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Arquivos temporários e uploads de mídia (não subir vídeos de teste ao git)
+uploads/
+outputs/
+temp/
+*.mp4
+*.mov
+*.avi
+*.zip
+
+# Ambientes e segredos
+.env
+.env.local
+
+# IDEs e sistema
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
