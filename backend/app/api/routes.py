@@ -36,6 +36,18 @@ def create_session():
     return {"session_id": session_id}
 
 
+@router.post("/session/purge/{session_id}")
+def purge_session(session_id: str):
+    """
+    Exclui imediatamente todos os arquivos e vídeos do disco ao atualizar ou sair da página.
+    Evita acúmulo de arquivos e garante limpeza contínua.
+    """
+    StorageService.purge_session(session_id)
+    if session_id in job_status:
+        del job_status[session_id]
+    return {"message": "Sessão e arquivos apagados com sucesso."}
+
+
 ALLOWED_EXTENSIONS = {".mp4", ".mov", ".m4v"}
 MAX_FILE_SIZE = 100 * 1024 * 1024  # 100 MB por clipe
 

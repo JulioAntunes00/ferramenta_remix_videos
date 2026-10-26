@@ -23,8 +23,18 @@ export default function App() {
   const [activeModalVideo, setActiveModalVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Inicializar nova sessão ao carregar a página
-  const initSession = async () => {
+  // Inicializar nova sessão ao carregar a página ou resetar
+  const initSession = async (oldSessionId = null) => {
+    // Se havia uma sessão anterior (ex: ao clicar em "Novo Lote"), purga os arquivos dela
+    if (oldSessionId) {
+      try {
+        fetch(`http://127.0.0.1:8000/api/session/purge/${oldSessionId}`, { 
+          method: 'POST',
+          keepalive: true 
+        }).catch(() => {});
+      } catch (e) {}
+    }
+
     try {
       const res = await fetch('http://127.0.0.1:8000/api/session/create', { method: 'POST' });
       const data = await res.json();
@@ -39,7 +49,20 @@ export default function App() {
 
   useEffect(() => {
     initSession();
-  }, []);
+
+    // Limpeza automática ao dar F5, fechar a aba ou sair do site
+    const handleBeforeUnload = () => {
+      if (sessionId) {
+        // Envia beacon nativo para apagar imediatamente os arquivos do disco
+        navigator.sendBeacon(`http://127.0.0.1:8000/api/session/purge/${sessionId}`);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [sessionId]);
 
   // Upload individual de arquivo
   const handleUpload = async (category, file) => {
@@ -155,7 +178,7 @@ export default function App() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={initSession}
+              onClick={() => initSession(sessionId)}
               className="px-3.5 py-1.5 bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 transition-all flex items-center gap-2"
             >
               <RefreshCw className="w-3.5 h-3.5" /> Novo Lote
