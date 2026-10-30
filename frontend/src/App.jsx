@@ -108,6 +108,24 @@ export default function App() {
     }
   };
 
+  // Remover vídeo enviado individualmente
+  const handleDeleteFile = async (category, filename) => {
+    if (!sessionId) return;
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/upload/${sessionId}/${category}/${filename}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        setUploads((prev) => ({
+          ...prev,
+          [category]: prev[category].filter((f) => f.name !== filename),
+        }));
+      }
+    } catch (err) {
+      console.error('Erro ao deletar clipe:', err);
+    }
+  };
+
   // Carregar pré-visualização de combinações e score
   useEffect(() => {
     const fetchPreview = async () => {
@@ -225,6 +243,7 @@ export default function App() {
             badgeColor="bg-rose-500"
             files={uploads.hook}
             onUpload={handleUpload}
+            onDelete={handleDeleteFile}
             disabled={isLoading || renderStatus.status === 'processing'}
           />
 
@@ -236,6 +255,7 @@ export default function App() {
             badgeColor="bg-indigo-500"
             files={uploads.body}
             onUpload={handleUpload}
+            onDelete={handleDeleteFile}
             disabled={isLoading || renderStatus.status === 'processing'}
           />
 
@@ -247,6 +267,7 @@ export default function App() {
             badgeColor="bg-emerald-500"
             files={uploads.cta}
             onUpload={handleUpload}
+            onDelete={handleDeleteFile}
             disabled={isLoading || renderStatus.status === 'processing'}
           />
         </div>

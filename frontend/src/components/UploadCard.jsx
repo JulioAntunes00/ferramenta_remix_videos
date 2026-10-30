@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { UploadCloud, CheckCircle2, Film, ArrowDownCircle } from 'lucide-react';
+import { UploadCloud, CheckCircle2, Film, ArrowDownCircle, Trash2 } from 'lucide-react';
 
 export const UploadCard = ({
   title,
@@ -9,6 +9,7 @@ export const UploadCard = ({
   badgeColor,
   files,
   onUpload,
+  onDelete,
   disabled
 }) => {
   const fileInputRef = useRef(null);
@@ -110,7 +111,7 @@ export const UploadCard = ({
               {files.map((file, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between p-2.5 bg-slate-900/80 border border-slate-800/80 rounded-xl text-xs"
+                  className="flex items-center justify-between p-2.5 bg-slate-900/80 border border-slate-800/80 hover:border-slate-700/80 rounded-xl text-xs transition-colors group/item"
                 >
                   <div className="flex items-center gap-2 overflow-hidden pr-2">
                     <Film className="w-4 h-4 text-indigo-400 shrink-0" />
@@ -123,7 +124,18 @@ export const UploadCard = ({
                       )}
                     </div>
                   </div>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 group-hover/item:hidden" />
+                    <button
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => onDelete && onDelete(category, file.name)}
+                      className="hidden group-hover/item:flex p-1 hover:bg-rose-500/20 text-rose-400 rounded-md transition-colors"
+                      title="Excluir este vídeo"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               ))}
               

@@ -137,6 +137,23 @@ async def upload_clip(
     }
 
 
+@router.delete("/upload/{session_id}/{category}/{filename}")
+def delete_clip(session_id: str, category: str, filename: str):
+    """
+    Remove um vídeo previamente enviado antes de renderizar.
+    Permite ao usuário descartar clipes que não queira mais na combinação.
+    """
+    if not session_id.isalnum() or category not in ["hook", "body", "cta"]:
+        raise HTTPException(status_code=400, detail="Parâmetros inválidos.")
+
+    paths = StorageService.get_session_paths(session_id)
+    target_file = paths["upload"] / category / filename
+    if target_file.exists():
+        target_file.unlink()
+        return {"message": "Arquivo removido com sucesso.", "filename": filename}
+    raise HTTPException(status_code=404, detail="Arquivo não encontrado.")
+
+
 @router.get("/preview/{session_id}")
 def preview_combinations(session_id: str):
     """
@@ -260,12 +277,17 @@ def get_render_status(session_id: str):
 
 @router.get("/video/{session_id}/{filename}")
 def stream_video(session_id: str, filename: str):
-    """Permite visualizar/reproduzir o vídeo gerado na interface."""
+    """Permite baixar diretamente ou visualizar o vídeo gerado na interface."""
     paths = StorageService.get_session_paths(session_id)
     file_path = paths["output"] / filename
     if not file_path.exists():
         raise HTTPException(status_code=404, detail="Vídeo não encontrado.")
-    return FileResponse(file_path, media_type="video/mp4")
+    return FileResponse(
+        file_path, 
+        media_type="video/mp4",
+        filename=filename,
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )
 
 
 @router.get("/download-zip/{session_id}")
@@ -277,5 +299,6 @@ def download_zip(session_id: str):
     return FileResponse(
         zip_path,
         media_type="application/zip",
-        filename=f"lote_remix_videos_{session_id}.zip"
+        filename=f"lote_multiplicador_tiktok_{session_id}.zip",
+        headers={"Content-Disposition": f'attachment; filename="lote_multiplicador_tiktok_{session_id}.zip"'}
     )
