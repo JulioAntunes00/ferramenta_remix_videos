@@ -47,14 +47,21 @@ export default function App() {
     }
   };
 
+  // Ref para sempre ter o sessionId atualizado dentro do listener sem causar re-render infinito
+  const sessionIdRef = React.useRef(sessionId);
   useEffect(() => {
+    sessionIdRef.current = sessionId;
+  }, [sessionId]);
+
+  useEffect(() => {
+    // Inicializa a sessão apenas uma vez na montagem inicial
     initSession();
 
     // Limpeza automática ao dar F5, fechar a aba ou sair do site
     const handleBeforeUnload = () => {
-      if (sessionId) {
+      if (sessionIdRef.current) {
         // Envia beacon nativo para apagar imediatamente os arquivos do disco
-        navigator.sendBeacon(`http://127.0.0.1:8000/api/session/purge/${sessionId}`);
+        navigator.sendBeacon(`http://127.0.0.1:8000/api/session/purge/${sessionIdRef.current}`);
       }
     };
 
@@ -62,7 +69,7 @@ export default function App() {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [sessionId]);
+  }, []); // Array vazio: executa estritamente uma única vez ao carregar a página
 
   // Upload individual de arquivo
   const handleUpload = async (category, file) => {
